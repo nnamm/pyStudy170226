@@ -1,7 +1,9 @@
 import sys
 
-SRC_STRING = '"></a><script'
-DST_STRING = '" class="aligncenter></a><script'
+TARGET_TEXT = 'a data-flickr-embed'                 # Replacement target
+SRC_STRING = '"></a><script'                        # Text before replacement
+DST_STRING = '" class="aligncenter></a><script'     # Text after replacement 
+NEW_LINE = '\n' + '　' + '\n'                        # Formatting text
 
 # Init process
 try:
@@ -10,17 +12,24 @@ try:
     src_file = open(file_name, 'r')                 # Open file
     new_file = open('NEW_' + file_name, 'w')        # Create new file
 except IndexError:
-    print('Usage: %s TEXTFILE')
+    print('Not exist argumet')
+    sys.exit()
 except IOError:
-    print('"%s" cannot be opened.')
+    print('Cannot open file.')
+    sys.exit()
+except:
+    print('System error.')
+    sys.exit()
 
-# Repeat the following processing
-target_text = 'a data-flickr-embed'
+# Format the text
 for l in src_file:
-    if target_text in l:
+    # Set 'DOUBLE_BYTE SPACE' before & after the target_text.
+    if TARGET_TEXT in l:
+        new_file.write(NEW_LINE)
         new_file.write(l.replace(SRC_STRING, DST_STRING))
+        new_file.write(NEW_LINE)
     else:
         new_file.write(l)
 
-src_file.close()
-new_file.close()
+src_file.close()                                    # Close the src file.
+new_file.close()                                    # Save the new file.
